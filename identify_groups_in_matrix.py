@@ -1,7 +1,22 @@
+"""
+    Given a n*n matrix of zeros and ones, return an array [a,b] where "a" is the number of 1 groups and "b" is the number of 0 groups.
+    A group is defined by adjacent(horizontally and/or vertically, but not diagonally) numbers of the same value.
+    Example:
+    input = [
+        [0, 0, 1, 1],
+        [0, 0, 1, 0],
+        [1, 0, 0, 1],
+        [1, 1, 1, 0]
+    ]
+    # output = [3, 3]
+"""
+
 from typing import List, Tuple
+
 
 class TrailIndexReached(Exception):
     pass
+
 
 class GroupMatrix:
     def __init__(self, matrix: List[List[int]]):
@@ -25,7 +40,7 @@ class GroupMatrix:
             and element == self.matrix[x][y - 1]
             and [x, y - 1] not in index_checked
             else (x, y),
-
+            
             lambda x, y, array, element, index_checked: (x - 1, y)
             if x - 1 >= 0
             and element == self.matrix[x - 1][y]
@@ -33,7 +48,9 @@ class GroupMatrix:
             else (x, y),
         ]
 
-    def _get_new_coordinates(self, x: int, y: int, array: List, element: int) -> Tuple[int, int, bool]:
+    def _get_new_coordinates(
+        self, x: int, y: int, array: List, element: int
+    ) -> Tuple[int, int, bool]:
         changed_coordinates = False
         new_x = x
         new_y = y
@@ -51,18 +68,18 @@ class GroupMatrix:
         while continue_while_main:
             self._index_checked.append([x, y])
             tx.insert(0, x)
-            ty.insert(0, y)            
-            x, y, _ = self._get_new_coordinates(x, y, array, element)                  
+            ty.insert(0, y)
+            x, y, _ = self._get_new_coordinates(x, y, array, element)
             pos = 0
             continue_while_trail = True
-            while continue_while_trail:   
+            while continue_while_trail:
                 try:
                     if pos == len(tx) or pos == len(ty):
                         raise TrailIndexReached
                     x, y, changed_coordinates = self._get_new_coordinates(
                         tx[pos], ty[pos], array, element
                     )
-                    continue_while_trail = not changed_coordinates                    
+                    continue_while_trail = not changed_coordinates
                     pos += 1
                 except TrailIndexReached:
                     self._total[element] += 1
