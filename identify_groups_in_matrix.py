@@ -1,5 +1,7 @@
 from typing import List, Tuple
 
+class TrailIndexReached(Exception):
+    pass
 
 class GroupMatrix:
     def __init__(self, matrix: List[List[int]]):
@@ -55,12 +57,14 @@ class GroupMatrix:
             continue_while_trail = True
             while continue_while_trail:   
                 try:
+                    if pos == len(tx) or pos == len(ty):
+                        raise TrailIndexReached
                     x, y, changed_coordinates = self._get_new_coordinates(
                         tx[pos], ty[pos], array, element
                     )
                     continue_while_trail = not changed_coordinates                    
                     pos += 1
-                except IndexError:
+                except TrailIndexReached:
                     self._total[element] += 1
                     continue_while_main = False
                     break
