@@ -48,28 +48,22 @@ class GroupMatrix:
         continue_while_main = True
         while continue_while_main:
             self._index_checked.append([x, y])
-            tx.append(x)
-            ty.append(y)
-            try:
-                x, y, _ = self._get_new_coordinates(x, y, array, element)
-                tx.reverse()
-                ty.reverse()
-                pos = 0
-                continue_while_trail = True
-                while continue_while_trail:
-                    try:
-                        x, y, changed_coordinates = self._get_new_coordinates(
-                            tx[pos], ty[pos], array, element
-                        )
-                        continue_while_trail = not changed_coordinates
-                        pos += 1
-                    except IndexError:
-                        self._total[element] += 1
-                        continue_while_main = False
-                        break
-            except IndexError:
-                self._total[element] += 1
-                break
+            tx.insert(0, x)
+            ty.insert(0, y)            
+            x, y, _ = self._get_new_coordinates(x, y, array, element)                  
+            pos = 0
+            continue_while_trail = True
+            while continue_while_trail:   
+                try:
+                    x, y, changed_coordinates = self._get_new_coordinates(
+                        tx[pos], ty[pos], array, element
+                    )
+                    continue_while_trail = not changed_coordinates                    
+                    pos += 1
+                except IndexError:
+                    self._total[element] += 1
+                    continue_while_main = False
+                    break
 
     def get_grouping_of_elements(self) -> List[int]:
         self._index_checked = []
